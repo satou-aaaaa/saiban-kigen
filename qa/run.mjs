@@ -53,6 +53,7 @@ const NEVER = {};
         if (!/　期間は？$/.test(P.q) || P.rev) why.push("問いの言い方がちがう");
         if (P.q.includes(t[0])) why.push("問いに答えの名前が出ている");
         if (P.opts.some((o) => (NEVER[k.id] || []).includes(o))) why.push("説明に当てはまりうる類が、まちがいの選び肢にまじる");
+        if (P.opts.includes("72時間") && P.opts.includes("3日")) why.push("同じ長さの72時間と3日が両方、選び肢に出る（CodeRabbit saiban-kigen#1）");
         if (k.lv === 0 && P.opts.some((o) => near.includes(o))) why.push("やさしいのに、まぎらわしい類がまじる");
         if (k.lv === 2 && !P.opts.some((o) => near.includes(o))) why.push("むずかしいのに、まぎらわしい類が無い");
       }

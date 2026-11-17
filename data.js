@@ -17,6 +17,8 @@
 
   // 選び肢になる期限（10。短い順。14日と2週間は同じ長さなので1つにまとめる）
   const LEVELS = ["24時間", "48時間", "72時間", "3日", "1週間", "10日", "14日（2週間）", "30日", "2か月", "5年"];
+  // 同じ長さの期限（72時間と3日）は、選び肢に両方を出さない。片方が答えならもう片方を、どちらも答えでないなら3日を外す（CodeRabbit saiban-kigen#1）
+  const SAME = { "72時間": "3日", "3日": "72時間" };
   // 2段目「どのきまり？」の3つ
   const GRP_OF = {};
   const GROUPS = {
@@ -36,7 +38,7 @@
 
   // 選び肢：やさしいは3つ（まぎらわしい期間 near を入れない）、ふつうは4つ、むずかしいは4つ（near を1つ必ず入れる）
   function distract(R, a, lv, near) {
-    const all = LEVELS.map((_, i) => i).filter((i) => i !== a);
+    const all = LEVELS.map((_, i) => i).filter((i) => i !== a && LEVELS[i] !== (SAME[LEVELS[a]] || "3日"));
     if (lv === 0) return pickN(R, all.filter((i) => !near.includes(i)), 2);
     if (lv === 1) return pickN(R, all, 3);
     const nb = all.filter((i) => near.includes(i)), rest = all.filter((i) => !near.includes(i));
